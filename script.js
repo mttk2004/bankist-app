@@ -116,18 +116,21 @@ const calcDisplayBalance = function(movements) {
 
 
 // Display summary
-const calcDisplaySummary = function (movements) {
-  const sumIn = movements.filter(mov => mov > 0)
-                         .reduce((acc, mov) => acc + mov, 0)
+const calcDisplaySummary = function (account) {
+  const sumIn = account.movements
+                       .filter(mov => mov > 0)
+                       .reduce((acc, mov) => acc + mov, 0)
   labelSumIn.textContent = `${sumIn}€`
   
-  const sumOut = movements.filter(mov => mov < 0)
-                          .reduce((acc, mov) => acc + mov, 0)
+  const sumOut = account.movements
+                        .filter(mov => mov < 0)
+                        .reduce((acc, mov) => acc + mov, 0)
   labelSumOut.textContent = `${Math.abs(sumOut)}€`
   
-  const interest = movements.filter(mov => mov > 0)
-                            .map(deposit => deposit * .012)
-                            .reduce((acc, el) => acc + el, 0)
+  const interest = account.movements
+                          .filter(mov => mov > 0)
+                          .map(deposit => deposit * account.interestRate / 100)
+                          .reduce((acc, el) => acc + el, 0)
   labelSumInterest.textContent = `${interest}€`
 }
 
@@ -146,7 +149,13 @@ btnLogin.addEventListener('click', function (e) {
   }
   
   const currentAccount = accounts.find(acc => acc.username === username);
+  
   if (currentAccount?.pin === Number(pin)) { // Login successfully
+    // Remove input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginUsername.blur();
+    inputLoginPin.blur();
+    
     // Display welcome message
     labelWelcome.textContent = `Hello, ${currentAccount.owner.split(' ')[0]}`;
     
@@ -154,8 +163,9 @@ btnLogin.addEventListener('click', function (e) {
     containerApp.classList.add("active");
     displayMovements(currentAccount.movements);
     calcDisplayBalance(currentAccount.movements);
-    calcDisplaySummary(currentAccount.movements);
+    calcDisplaySummary(currentAccount);
   } else {
+    containerApp.classList.remove("active");
     alert("Something went wrong!");
   }
 });

@@ -99,7 +99,7 @@ nav {
   transition: all 1s;
 }
 
-.app.active {
+.active {
   opacity: 1;
   visibility: visible;
 }
