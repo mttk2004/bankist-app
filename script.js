@@ -188,6 +188,7 @@ btnTransfer.addEventListener('click', function(e) {
   const amount = Number(inputTransferAmount.value);
   inputTransferTo.value = inputTransferAmount.value = '';
   
+  // Step 2: transfer
   if (amount > 0
       && receiverAcc
       && currentAccount.balance >= amount
@@ -199,6 +200,54 @@ btnTransfer.addEventListener('click', function(e) {
     alert('Something went wrong');
   }
 
+});
+
+
+// CLOSE ACCOUNT FUNCTIONALITY
+btnClose.addEventListener('click', function(e) {
+  e.preventDefault();
+  
+  // Step 1: close account inputs validating
+  const username = inputCloseUsername.value;
+  const pin = Number(inputClosePin.value);
+  
+  if (!username ?? !pin) {
+    alert('Something went wrong!');
+    return;
+  }
+  
+  if (username === currentAccount.username
+      && pin === currentAccount.pin
+  ) {
+    accounts.splice(
+        accounts.findIndex(
+            acc => acc.username === username), 1);
+    
+    inputCloseUsername.value = inputClosePin.value = '';
+    containerApp.classList.remove("active");
+    labelWelcome.textContent = 'Log in to get started';
+    alert('Your account has been closed! Goodbye!');
+  }
+});
+
+
+// REQUEST LOAN FUNCTIONALITY
+btnLoan.addEventListener('click', function(e) {
+  e.preventDefault();
+  
+  const amount = Number(inputLoanAmount.value);
+  
+  if (amount > 0 && currentAccount.movements
+                                  .some(mov => mov >= amount)
+  ) {
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+    alert('Your loan request is approved!');
+  } else {
+    alert('Your loan request is refused!');
+  }
+  
+  inputLoanAmount.value = '';
 });
 
 
