@@ -89,12 +89,16 @@ accounts.forEach(acc => createUsername(acc))
 
 
 // Display movements
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
+  // Step 0; check if sort is needed
+  const movs = sort ? movements.slice().sort((a, b) => a - b)
+                    : movements;
+  
   // Step 1: remove the content of the container
   containerMovements.innerHTML = '';
   
   // Step 2: display movements
-  movements.forEach(function(mov, i) {
+  movs.forEach(function(mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     
     const movRow =
@@ -248,6 +252,16 @@ btnLoan.addEventListener('click', function(e) {
   }
   
   inputLoanAmount.value = '';
+});
+
+
+// SORT MOVEMENTS FUNCTIONALITY
+let sortNeeded = false;
+btnSort.addEventListener('click', function(e) {
+  e.preventDefault();
+  
+  sortNeeded = !sortNeeded;
+  displayMovements(currentAccount.movements, sortNeeded);
 });
 
 
