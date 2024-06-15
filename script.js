@@ -216,7 +216,7 @@ const displayDatetime = function () {
 
 // Start logout timer
 const startLogoutTimer = function() {
-  let time = 30;
+  let time = 120;
   
   const tick = function() {
     const min = String(Math.trunc(time / 60)).padStart(2, '0');
